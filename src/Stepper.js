@@ -51,9 +51,11 @@ module.exports = function (speed, availablePositions) {
 
 
     // Calibrate
-    this.calibrate = function () {
+    this.calibrate = function (callback) {
         isCalibrating = true;
-        calibrationStep();
+        calibrationStep(function(){
+            callback();
+        });
         currentStep = 0;
     };
 
@@ -65,17 +67,18 @@ module.exports = function (speed, availablePositions) {
     // Stop calibrating on sensor
     calibrationSensor.on("release", function () {
         isCalibrating = false;
+        currentPosition = 0;
     });
 
     // Calibration runner
-    calibrationStep = function () {
+    calibrationStep = function (callback) {
         if (isCalibrating === false)
-            return;
+            return callback();
 
         stepper.rpm(15).ccw().step(stepsPerRev / 360, function () {
 
             // Will this eventually cause a stack overflow?
-            calibrationStep();
+            calibrationStep(callback);
         });
     }
 

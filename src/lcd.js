@@ -26,9 +26,10 @@ module.exports = function () {
 
 
     function washText(text) {
-        if(!text) return;
+        if(text === undefined) return "";
         if (text.length > cols)
-            return text.substring(0, cols);
+            return text.substring(0, cols-1);
+        return text;
     }
 
     this.print = function (text) {
