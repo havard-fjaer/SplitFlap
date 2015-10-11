@@ -10,7 +10,7 @@
   },
   "license": "CC-BY-SA-4.0",
   "readme": "readme.txt",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {
     "serialport": "latest",
     "express": "latest",
