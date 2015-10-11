@@ -14,7 +14,9 @@ board.on("ready", function() {
     var lcd = new LCD();
     var api = express.Router();
 
-    // Calibration
+    stepper.calibrate();
+
+    // Calibration API
     api.get('/calibrate/start', function (req, res) {
         stepper.calibrate();
         var text = "Calibrate";
@@ -29,7 +31,7 @@ board.on("ready", function() {
         message(text,res);
     });
 
-    // Position
+    // Position API
     api.get('/position/:position', function (req, res) {
         stepper.goToPosition(req.params.position, function(position){
             var text = "Position: " + position;
@@ -38,7 +40,7 @@ board.on("ready", function() {
         });
     });
 
-    // Display
+    // Display API
     api.get('/display/:text', function (req, res) {
         lcd.print(req.params.text);
         message(req.params.text, res)

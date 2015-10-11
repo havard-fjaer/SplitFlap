@@ -26,6 +26,7 @@ module.exports = function () {
 
 
     function washText(text) {
+        if(!text) return;
         if (text.length > cols)
             return text.substring(0, cols);
     }
