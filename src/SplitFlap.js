@@ -1,90 +1,66 @@
+// Router
 var express = require('express');
 var app = express();
 
-var five = require("johnny-five"),
-    board, lcd;
-
-board = new five.Board();
-
-
-
-
-
-
+// Hardware
+var five = require("johnny-five");
+var board = new five.Board();
+var Stepper = require('./Stepper.js');
+var LCD = require('./lcd.js');
 
 board.on("ready", function() {
 
-    var stepper = require('./Stepper.js')(five);
-
-    var button = new five.Button(7);
-
-    button.on("press", function() {
-        console.log('calibrate');
-      stepper.calibrate();
-    });
-
-
-
-    lcd = new five.LCD({
-        // LCD pin name  RS  EN  DB4 DB5 DB6 DB7
-        // Arduino pin # 7    8   9   10  11  12
-        // Arduino pin # 12  11   5    4   3   2
-        pins: [12, 11, 5, 4, 3, 2],
-        backlight: 6,
-        rows: 2,
-        cols: 20
-
-        // Options:
-        // bitMode: 4 or 8, defaults to 4
-        // lines: number of lines, defaults to 2
-        // dots: matrix dimensions, defaults to "5x8"
-    });
-
-    // Tell the LCD you will use these characters:
-    lcd.useChar("check");
-    lcd.useChar("heart");
-    lcd.useChar("duck");
-
-    app.get('/', function (req, res) {
-        res.send('Split-flap display ready!');
-    });
-
+    var stepper = new Stepper(45, 12);
+    var lcd = new LCD();
     var api = express.Router();
 
-    api.get('/position/:position', function (req, res) {
-        var text = "Position: " + req.params.position;
-        console.log(text);
-        res.send(text);
-        lcd.clear().cursor(0, 0).print(text);
+    // Calibration
+    api.get('/calibrate/start', function (req, res) {
+        stepper.calibrate();
+        var text = "Calibrate";
+        lcd.print(text);
+        message(text,res);
     });
 
-    api.get('/calibrate/:speed', function (req, res) {
-        var text = "Calibrate: " + req.params.speed;
-        console.log(text);
-        res.send(text);
-        lcd.clear().cursor(0, 0).print(text);
+    api.get('/calibrate/stop', function (req, res) {
+        stepper.stopCalibration();
+        var text = "Stopped calibration";
+        lcd.print(text);
+        message(text,res);
+    });
+
+    // Position
+    api.get('/position/:position', function (req, res) {
+        stepper.goToPosition(req.params.position, function(position){
+            var text = "Position: " + position;
+            lcd.print(text);
+            message(text, res);
+        });
+    });
+
+    // Display
+    api.get('/display/:text', function (req, res) {
+        lcd.print(req.params.text);
+        message(req.params.text, res)
     });
 
     api.get('/display/:line1/:line2', function (req, res) {
-        var text = req.params.line1 + " " + req.params.line2;
-        console.log(text);
-        res.send(text);
-        lcd.clear().cursor(0, 0).print(req.params.line1)
-            .cursor(1, 0).print(req.params.line2);
+        lcd.print(req.params.line1, req.params.line2);
+        message(req.params.line1 + "<br>" + req.params.line2, res)
     });
 
-    app.use('/api', api); // load the router on '/api'
-
+    // Router and server
+    app.use('/api', api);
     var server = app.listen(3000, function () {
         var host = server.address().address;
         var port = server.address().port;
-
-        console.log('Example app listening at http://%s:%s', host, port);
+        console.log('SplitFlap listening at  http://%s:%s', host, port);
     });
 
-
-    this.repl.inject({
-        lcd: lcd
-    });
+    // Helpers
+    function message(text,res) {
+        console.log(text);
+        res.send(text);
+    }
 
 });
