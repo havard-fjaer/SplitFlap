@@ -1,7 +1,14 @@
 var gulp = require('gulp');
 var GulpSSH = require('gulp-ssh');
+var GulpSFTP = require('gulp-sftp');
 
-var config = {
+// Path
+var buildPath = 'src/**/*.js';
+var basePath = '/home/pi/Source/SplitFlap/';
+var mainProgram = basePath + 'SplitFlap.js';
+
+// SSH
+var sshConfig = {
     host: '192.168.1.10',
     port: 22,
     username: 'pi',
@@ -10,25 +17,47 @@ var config = {
 
 var gulpSSH = new GulpSSH({
     ignoreErrors: false,
-    sshConfig: config
+    sshConfig: sshConfig
 });
 
-var file = '/home/pi/Source/SplitFlap/SplitFlap.js';
+// SFTP
+var sftpConfig = {
+    host: sshConfig.host,
+    user: sshConfig.username,
+    pass: sshConfig.password,
+    remotePath: basePath
+};
+
 
 gulp.task('split-flap-upload-to-rpi', function () {
-    gulp.watch('src/**/*.js', function(){
-        console.log('Upload');
-        return gulp.src('src/SplitFlap.js')
-            .pipe(gulpSSH.sftp('write', file))
-
-
+    process.stdout.write('Monitoring ' + buildPath + '\n');
+    gulp.watch(buildPath, function () {
+        return gulp.src([buildPath])
+            .pipe(GulpSFTP(sftpConfig));
     });
-
 });
 
 gulp.task('split-flap-run-on-rpi', function () {
-    var command = "node " + file;
-    return gulpSSH.shell([command], {filePath: 'run-split-flap-on-rpi.log'})
-        .pipe(gulp.dest('logs'));
+    return gulpSSH.shell("node " + mainProgram, {autoExit: false})
+        .on('ssh2Data', function (chunk) {
+            process.stdout.write(chunk);
+        });
 });
+
+/*
+gulp.task('split-flap-upload-to-rpi2', function () {
+    process.stdout.write('Monitoring ' + buildPath + '\n')
+    gulp.watch(buildPath)
+        .on("change", function(file) {
+            process.stdout.write(file.path + '\n');
+            function extracted() {
+                var dest = gulpSSH.dest(basePath);
+                return dest;
+            }
+
+            gulp.src('src/SplitFlap/')
+                .pipe(extracted());
+        });
+});
+*/
 

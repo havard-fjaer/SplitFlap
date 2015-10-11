@@ -6,7 +6,24 @@ var five = require("johnny-five"),
 
 board = new five.Board();
 
+
+
+
+
+
+
 board.on("ready", function() {
+
+    var stepper = require('./Stepper.js')(five);
+
+    var button = new five.Button(7);
+
+    button.on("press", function() {
+        console.log('calibrate');
+      stepper.calibrate();
+    });
+
+
 
     lcd = new five.LCD({
         // LCD pin name  RS  EN  DB4 DB5 DB6 DB7
@@ -16,7 +33,6 @@ board.on("ready", function() {
         backlight: 6,
         rows: 2,
         cols: 20
-
 
         // Options:
         // bitMode: 4 or 8, defaults to 4
@@ -30,7 +46,7 @@ board.on("ready", function() {
     lcd.useChar("duck");
 
     app.get('/', function (req, res) {
-        res.send('Hello World!');
+        res.send('Split-flap display ready!');
     });
 
     var api = express.Router();
