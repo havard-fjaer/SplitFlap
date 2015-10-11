@@ -22,8 +22,9 @@ module.exports = function (speed, availablePositions) {
         // Clean input
         if (newPosition > availablePositions)
             newPosition = availablePositions;
-        if (newPosition < 1)
+        if (newPosition < 1 || !(newPosition <= availablePositions && newPosition >= 1))
             newPosition = 1;
+
 
         moveOnePosition(newPosition, function () {
             callback(newPosition);
@@ -53,7 +54,7 @@ module.exports = function (speed, availablePositions) {
     // Calibrate
     this.calibrate = function (callback) {
         isCalibrating = true;
-        calibrationStep(function(){
+        calibrationStep(function () {
             callback();
         });
         currentStep = 0;

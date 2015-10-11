@@ -36,8 +36,8 @@ board.on("ready", function() {
 
     // Position API
     api.get('/position/:position', function (req, res) {
-        stepper.goToPosition(req.params.position, function(){
-            var text = "Position: " + req.params.position;
+        stepper.goToPosition(req.params.position, function(position){
+            var text = "Position: " + position;
             lcd.print(text);
             message(text, res);
         });
