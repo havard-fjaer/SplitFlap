@@ -1,0 +1,23 @@
+{
+  "name": "splitflap",
+  "description": "A Split-Flap display that supports a web api for setting the current flap.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/havard-fjaer/SplitFlap.git"
+  },
+  "bin": {
+    "splitflap": "./src/SplitFlap.js"
+  },
+  "license": "CC-BY-SA-4.0",
+  "readme": "readme.txt",
+  "version": "0.0.1",
+  "dependencies": {
+    "serialport": "latest",
+    "express": "latest",
+    "johnny-five": "latest",
+    "gulp": "latest",
+    "gulp-shell": "latest",
+    "gulp-ssh": "latest",
+    "gulp-sftp": "latest"
+  }
+}

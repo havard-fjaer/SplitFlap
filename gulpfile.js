@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var shell = require('gulp-shell');
 var GulpSSH = require('gulp-ssh');
 var GulpSFTP = require('gulp-sftp');
 
@@ -43,6 +44,9 @@ gulp.task('split-flap-run-on-rpi', function () {
             process.stdout.write(chunk);
         });
 });
+
+gulp.task('split-flap-run-on-mac', shell.task(['node src/SplitFlap.js']));
+
 
 /*
 gulp.task('split-flap-upload-to-rpi2', function () {
