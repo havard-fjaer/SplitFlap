@@ -14,7 +14,7 @@ module.exports = function (speed, availablePositions) {
     });
     var calibrationSensor = new five.Button(7);
     var isCalibrating = false;
-    var currentPosition = 0;
+    var currentPosition = 1;
 
 
     // Go to position
@@ -67,7 +67,7 @@ module.exports = function (speed, availablePositions) {
     // Stop calibrating on sensor
     calibrationSensor.on("release", function () {
         isCalibrating = false;
-        currentPosition = 0;
+        currentPosition = 1;
     });
 
     // Calibration runner
