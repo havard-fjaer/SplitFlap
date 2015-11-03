@@ -8,11 +8,11 @@ module.exports = function (speed, availablePositions) {
         type: five.Stepper.TYPE.DRIVER,
         stepsPerRev: stepsPerRev,
         pins: {
-            step: 8,
-            dir: 9
+            step: 4,
+            dir: 3
         }
     });
-    var calibrationSensor = new five.Button(7);
+    var calibrationSensor = new five.Button(5);
     var isCalibrating = false;
     var currentPosition = 1;
 

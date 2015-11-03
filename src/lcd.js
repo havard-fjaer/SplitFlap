@@ -5,11 +5,14 @@ module.exports = function () {
     const cols = 16;
     const rows = 2;
     lcd = new five.LCD({
+
+        // 7  6  -  +  -
+        //12 11 10  9  8
+
         // LCD pin name  RS  EN  DB4 DB5 DB6 DB7
-        // Arduino pin # 7    8   9   10  11  12
-        // Arduino pin # 12  11   5    4   3   2
-        pins: [12, 11, 5, 4, 3, 2],
-        backlight: 6,
+        // Arduino pin #  7   6   11  10   9   8
+        pins: [7, 6, 11, 10, 9, 8],
+        backlight: 12,
         rows: rows,
         cols: cols
 
