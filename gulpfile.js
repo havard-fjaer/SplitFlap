@@ -10,7 +10,7 @@ var mainProgram = basePath + 'SplitFlap.js';
 
 // SSH
 var sshConfig = {
-    host: '192.168.1.10',
+    host: '192.168.1.102',
     port: 22,
     username: 'pi',
     password: 'raspberry' // Please don't hack me :)
