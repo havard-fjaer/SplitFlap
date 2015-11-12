@@ -19,12 +19,23 @@ board.on("ready", function() {
         lcd.print("Calibrated");
     });
 
+    // Demo API
+    api.get('/demo/start', function (req, res) {
+        stepper.calibrate(function(){
+            stepper.goToPosition(5);
+        });
+    });
+
+
     // Calibration API
     api.get('/calibrate/start', function (req, res) {
-        stepper.calibrate();
+        stepper.calibrate(function(){
+            stepper.goToPosition(5);
+        });
         var text = "Calibrate";
         lcd.print(text);
         message(text,res);
+
     });
 
     api.get('/calibrate/stop', function (req, res) {
@@ -56,6 +67,7 @@ board.on("ready", function() {
 
     // Router and server
     app.use('/api', api);
+    app.use('/', 'index.html')
     var server = app.listen(3000, function () {
         var host = server.address().address;
         var port = server.address().port;

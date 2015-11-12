@@ -32,7 +32,7 @@ module.exports = function (speed, availablePositions) {
     };
 
     // Movement runner
-    moveOnePosition = function (newPosition, callback) {
+    var moveOnePosition = function (newPosition, callback) {
 
         // Stop if at position
         if (currentPosition == newPosition) return callback();
@@ -57,7 +57,6 @@ module.exports = function (speed, availablePositions) {
         calibrationStep(function () {
             callback();
         });
-        currentStep = 0;
     };
 
     // Stop calibrating
@@ -69,10 +68,11 @@ module.exports = function (speed, availablePositions) {
     calibrationSensor.on("release", function () {
         isCalibrating = false;
         currentPosition = 1;
+
     });
 
     // Calibration runner
-    calibrationStep = function (callback) {
+    var calibrationStep = function (callback) {
         if (isCalibrating === false)
             return callback();
 

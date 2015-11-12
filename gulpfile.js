@@ -4,13 +4,13 @@ var GulpSSH = require('gulp-ssh');
 var GulpSFTP = require('gulp-sftp');
 
 // Path
-var buildPath = 'src/**/*.js';
+var buildPath = 'src/**/*.js;src/index.html';
 var basePath = '/home/pi/Source/SplitFlap/';
 var mainProgram = basePath + 'SplitFlap.js';
 
 // SSH
 var sshConfig = {
-    host: '192.168.1.102',
+    host: '192.168.1.11',
     port: 22,
     username: 'pi',
     password: 'raspberry' // Please don't hack me :)
